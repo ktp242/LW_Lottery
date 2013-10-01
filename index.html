@@ -1,0 +1,60 @@
+<!-- 
+
+20130924
+Live Web
+Lottery Project
+An improvement and exercise of WebSocket
+with WebRTC and canvas
+
+Kang Peng
+
+ -->
+
+<html>
+ <head>
+     <script src="/socket.io/socket.io.js"></script>
+     <script>
+     
+     // connect to the server
+     var socket = io.connect('http://ec2-54-200-23-228.us-west-2.compute.amazonaws.com:8080/');
+
+     
+     // once connected send the message
+     socket.on('connect', function() {
+				console.log("Connected");
+			});
+
+     // recieved data from the div named "number" will be shown here in the div named "numbers"
+     socket.on('sendNumber', function(data) {
+     	console.log("Got" + data);
+     	document.getElementById('numbers').innerHTML += number;
+     });
+
+     //get the value in div named number and send it to server
+
+     var sendNumber = function() {
+     	var number = document.getElementById('number').value;
+     	console.log("Sending:" + number); 
+
+     	// send the value to server   	
+     	socket.emit('sendNumber', number);
+     };
+
+     </script>
+
+ </head>
+ 
+ <body>
+
+  <div width="600" height="600" id= "numbers">
+  Enter the number you want to choose. From 0-9.v11
+  </div>
+
+  <div>
+  <input type="text" id="number" name="number">
+  <input type="button" value="Send and wish you good luck" onclick= "sendNumber()">
+  </div>
+  
+ </body>
+
+</html>
