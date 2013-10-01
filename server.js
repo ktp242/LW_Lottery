@@ -7,6 +7,12 @@ An improvement and exercise of WebSocket
 with WebRTC and canvas
 
 Kang Peng
+ktp242@nyu.edu
+
+
+20130930
+1) set up username and receive it from client
+2) set up a object users to store the userInfo
 
 */
 
@@ -38,24 +44,33 @@ function requestHandler(req, res) {
 // WebSockets work with the HTTP server
 var io = require('socket.io').listen(httpServer);
 
+// create an object to store the info of users
+var users = {};
+
+
 // Register a callback function to run when we have an individual connection
-// This is run for each individual user that connects
+// Once a new user has connected, the function will refresh and create a new socket object for him/her
 io.sockets.on('connection',
 	// We are given a websocket object in our function
 	function (socket) {
-		console.log("v3 We have a new client: " + socket.id);
+		console.log("v12 We have a new client: " + socket.id);
 
 
 
-	    // // This object is for sending number chosed back to HTML
-	    // // 'sendNumber' is the pair to the function named 'sendNumber' in HTML for showing numbers as data in 
-	    // // a div named 'numbers'
-	    socket.on('sendNumber',
-	        function (number) {
-     //        // number means the sent number from HTML named number and is broadcast by 
-     //        // a socket fuction named broadcast.send
-		     console.log("lottery number:" + number);
-		     socket.broadcast.send(number);
+	    // This object is for sending number chosed back to HTML
+	    // 'sendNumber' is the pair to the function named 'sendNumber' in HTML for showing numbers as data in 
+	    // a div named 'numbers'
+	    socket.on('sendInfo',
+	        function (number, username) {
+             
+             // number and username mean the sent number and username from HTML
+		     // add values to the object users 
+             users[username]= number;
+		     console.log("lottery user:" + username + "+" + number);
+		     console.log(users);
+             
+             // send number and username back to the HTML
+		     socket.broadcast.send(number, username);
 	    });
 
 		

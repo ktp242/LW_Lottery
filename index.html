@@ -7,6 +7,12 @@ An improvement and exercise of WebSocket
 with WebRTC and canvas
 
 Kang Peng
+ktp242@nyu.edu
+
+
+20130930
+1) change my form from text to number
+2) create a new input for username and send it to the server
 
  -->
 
@@ -25,19 +31,22 @@ Kang Peng
 			});
 
      // recieved data from the div named "number" will be shown here in the div named "numbers"
-     socket.on('sendNumber', function(data) {
+     socket.on('sendInfo', function(data) {
      	console.log("Got" + data);
      	document.getElementById('numbers').innerHTML += number;
+     	document.getElementById('usernames').innerHTML += username;
      });
 
      //get the value in div named number and send it to server
 
-     var sendNumber = function() {
+     var sendInfo = function() {
      	var number = document.getElementById('number').value;
-     	console.log("Sending:" + number); 
+     	var username = document.getElementById('username').value;
+
+     	console.log("Sending:" + username + "+" + number); 
 
      	// send the value to server   	
-     	socket.emit('sendNumber', number);
+     	socket.emit('sendInfo', number, username);
      };
 
      </script>
@@ -47,12 +56,13 @@ Kang Peng
  <body>
 
   <div width="600" height="600" id= "numbers">
-  Enter the number you want to choose. From 0-9.v11
+  Enter the number you want to choose. From 0-9.v20
   </div>
 
   <div>
-  <input type="text" id="number" name="number">
-  <input type="button" value="Send and wish you good luck" onclick= "sendNumber()">
+  <input type="text" id="username" name="username">
+  <input type="number" id="number" name="number" min="0" max="9">
+  <input type="button" value="Send and wish you good luck" onclick= "sendInfo()">
   </div>
   
  </body>
