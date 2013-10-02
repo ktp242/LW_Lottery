@@ -14,6 +14,9 @@ ktp242@nyu.edu
 1) set up username and receive it from client
 2) set up a object users to store the userInfo
 
+20131001
+3) set up an array to store winnerNumber
+
 */
 
 
@@ -46,6 +49,9 @@ var io = require('socket.io').listen(httpServer);
 
 // create an object to store the info of users
 var users = {};
+
+// create an array to store the winner number
+var winnderNumber = [];
 
 
 // Register a callback function to run when we have an individual connection

@@ -13,6 +13,16 @@ ktp242@nyu.edu
 20130930
 1) change my form from text to number
 2) create a new input for username and send it to the server
+3) create a function will generate a random number from 0-9 every 40 seconds
+   ? 0 and 9 are less possible to be shown in fact?
+
+20131001
+4) set a timer on the page
+   ? it is not accurate while the timer goes to 0 and generate the number,
+   even worse, each time the winnerNumber generated is one second ealier,
+   so the second winnerNumber will be generated two second earlier
+5) make the timer and generateWinner syncronous(only an setInterval function)
+?should I set my timer in server or client
 
  -->
 
@@ -23,7 +33,7 @@ ktp242@nyu.edu
      
      // connect to the server
      var socket = io.connect('http://ec2-54-200-23-228.us-west-2.compute.amazonaws.com:8080/');
-
+     
      
      // once connected send the message
      socket.on('connect', function() {
@@ -49,14 +59,58 @@ ktp242@nyu.edu
      	socket.emit('sendInfo', number, username);
      };
 
+     // generate a random number
+     var generateWinner = function() {
+
+     	var winnerNumber = Math.floor(Math.random()*10);
+     	console.log(winnerNumber);
+     	document.getElementById('winnerNumber').innerHTML = winnerNumber;
+
+     	// send the value to server
+     	socket.emit('generateWinner', winnerNumber);
+     };
+
+     // set up a timer, counting down every 40 second
+     var countingDown = function() {
+        
+        // the duration between each lottery 
+     	var duration = 40;
+        
+        // write the duration per second to the html and reset the duration
+        setInterval(function() {
+     	if (duration > 0)
+     	{ duration --; }        
+        else
+        {   generateWinner();
+        	duration = 40; 
+        }
+
+        document.getElementById('timer').innerHTML = duration;
+        // console.log(duration);
+     	
+     	}, 1000);
+     	};
+
+     // set a function to start everything
+     var startAll = function() {
+        countingDown();
+        };
+
+
      </script>
 
  </head>
  
- <body>
+ <body onload="startAll()">
+  
+  <h3><p id="timer"></p></h3>
+  <p>seconds before the lottery to be expired and showing the winner number!</p>
+  <h3><p>THE WINNER NUMBER IS</p></h3>
+  <h2><p id ="winnerNumber"></p></h2>
+
 
   <div width="600" height="600" id= "numbers">
-  Enter the number you want to choose. From 0-9.v20
+  It's a lottey! Enter the number you want to choose. From 0-9.v44
   </div>
 
   <div>
