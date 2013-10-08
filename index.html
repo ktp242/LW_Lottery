@@ -24,6 +24,16 @@ ktp242@nyu.edu
 5) make the timer and generateWinner syncronous(only an setInterval function)
 ?should I set my timer in server or client
 
+20131002
+6) remove the timer and generate winnerNumber. Put them into the server
+
+20131004
+7) tried to use AJAX to get data from the server
+
+20131006
+8) change AJAX way to socket
+9) set socket.on to retrieve duration and winnerNumber from server 
+
  -->
 
 <html>
@@ -49,7 +59,7 @@ ktp242@nyu.edu
 
      //get the value in div named number and send it to server
 
-     var sendInfo = function() {
+     var sendInfo = function() { 
      	var number = document.getElementById('number').value;
      	var username = document.getElementById('username').value;
 
@@ -59,49 +69,19 @@ ktp242@nyu.edu
      	socket.emit('sendInfo', number, username);
      };
 
-     // generate a random number
-     var generateWinner = function() {
+    socket.on('getWinner', function(duration, winnerNumber) {
+     	console.log("winner number is" + winnerNumber);
+     	document.getElementById('timer').innerHTML = duration; 
+     	document.getElementById('winnerNumber').innerHTML = winnerNumber; 
+     });
 
-     	var winnerNumber = Math.floor(Math.random()*10);
-     	console.log(winnerNumber);
-     	document.getElementById('winnerNumber').innerHTML = winnerNumber;
-
-     	// send the value to server
-     	socket.emit('generateWinner', winnerNumber);
-     };
-
-     // set up a timer, counting down every 40 second
-     var countingDown = function() {
-        
-        // the duration between each lottery 
-     	var duration = 40;
-        
-        // write the duration per second to the html and reset the duration
-        setInterval(function() {
-     	if (duration > 0)
-     	{ duration --; }        
-        else
-        {   generateWinner();
-        	duration = 40; 
-        }
-
-        document.getElementById('timer').innerHTML = duration;
-        // console.log(duration);
-     	
-     	}, 1000);
-     	};
-
-     // set a function to start everything
-     var startAll = function() {
-        countingDown();
-        };
 
 
      </script>
 
  </head>
  
- <body onload="startAll()">
+ <body>
   
   <h3><p id="timer"></p></h3>
   <p>seconds before the lottery to be expired and showing the winner number!</p>
@@ -110,7 +90,7 @@ ktp242@nyu.edu
 
 
   <div width="600" height="600" id= "numbers">
-  It's a lottey! Enter the number you want to choose. From 0-9.v44
+  It's a lottey! Enter the number you want to choose. From 0-9.v52
   </div>
 
   <div>

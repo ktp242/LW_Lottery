@@ -17,6 +17,17 @@ ktp242@nyu.edu
 20131001
 3) set up an array to store winnerNumber
 
+
+20131002
+4) tried to put timer and generate winnerNumber inside here
+
+20131004
+5) set an array winnerNumbers to store multiple winner numbers
+
+20131007
+6) set the getWinner function
+7) set io.sockets.emit to client
+
 */
 
 
@@ -51,7 +62,7 @@ var io = require('socket.io').listen(httpServer);
 var users = {};
 
 // create an array to store the winner number
-var winnderNumber = [];
+var winnerNumbers = [];
 
 
 // Register a callback function to run when we have an individual connection
@@ -59,7 +70,7 @@ var winnderNumber = [];
 io.sockets.on('connection',
 	// We are given a websocket object in our function
 	function (socket) {
-		console.log("v12 We have a new client: " + socket.id);
+		console.log("v32 We have a new client: " + socket.id);
 
 
 
@@ -79,7 +90,32 @@ io.sockets.on('connection',
 		     socket.broadcast.send(number, username);
 	    });
 
-		
+
+	    
+	    var getWinner = function() {
+	    	   
+	           var duration = 40;
+	    	   var winnerNumber;
+
+	    	   setInterval(function()
+	    	   {
+	     	       if (duration > 0)
+	     	       { duration --; }        
+	               else
+	               {
+		               winnerNumber = Math.floor(Math.random()*10);
+		        	   winnerNumbers.push(winnerNumber);
+		        	   console.log("winner number is " + winnerNumber);
+		        	   duration = 40;
+	               }                   
+                   io.sockets.emit('getWinner', duration, winnerNumber);
+               }
+     	       ,1000);
+	    	};
+
+	    getWinner();
+
+
 
         // Once the client has left
 	    socket.on ('disconnect', function() {
